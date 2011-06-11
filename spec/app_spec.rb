@@ -15,7 +15,6 @@ end
 describe RouletteService do
   context "upload" do
     it "stores an image" do
-      #image = File.open("testimage.jpg") 
       post '/upload', 'file' => Rack::Test::UploadedFile.new('spec/fixtures/testimage.jpg', 'image/jpg')
       Dir['uploads/*'].should include('uploads/testimage.jpg') 
     end
