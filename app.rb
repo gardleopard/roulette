@@ -9,6 +9,7 @@ require 'mongo'
 require 'json'
 #include Neo4j
 
+
 class RouletteService 
   Sinatra.register Mustache::Sinatra
 
@@ -38,9 +39,9 @@ class RouletteService
     mustache :upload
   end
   
-  get '/roulette/:champion/:challenger' do | champion, challenger | 
-    @champion   =  "/img/#{champion}"
-    @challenger =  "/img/#{challenger}"
+  get '/roulette/:image1/:image2' do | image1, image2 | #soon deprecated 
+    @image1   =  "/img/#{image2}"
+    @image2 =  "/img/#{iamge2}"
     mustache :roulette
   end 
   
@@ -51,6 +52,8 @@ class RouletteService
   
   get '/img/:filename' do | filename|
      content_type 'image/jpg'
+     
+     
      send_file("./uploads/#{filename}")
   end
   
@@ -95,13 +98,14 @@ class RouletteService
   end
   
   post 'winner/:imageid' do | imageid |
+    
   end
   
   #get '/search/:key' do | key | 
   #  image = Image.find("filename: #{key}").first
   #  redirect "/preview/#{image.filename}"
   #end
-  
+   
   get '/mongodb' do
   
        #imagejson = imagecollection.find({:type => "image"}).to_a #.to_a.first
@@ -116,9 +120,10 @@ class RouletteService
   
   end
   
-  
-  def pp_debug(obj)
-    "<pre>#{obj.pretty_inspect}</pre>"
+  helpers do 
+    def pp_debug(obj)
+      "<pre>#{obj.pretty_inspect}</pre>"
+    end
   end
 
 end  
