@@ -3,11 +3,9 @@ require 'bundler/setup'
 require 'sinatra'
 require 'mustache/sinatra'
 require 'fileutils'
-#require 'neo4j'
 require 'pp'
 require 'mongo'
 require 'json'
-#include Neo4j
 
 
 class RouletteService 
@@ -19,8 +17,6 @@ class RouletteService
     :views     => 'views/',
     :templates => 'templates/'
   }
-  
- 
   
   get '/' do
     mustache :index
@@ -54,17 +50,6 @@ class RouletteService
      send_file("./uploads/#{filename}")
   end
   
-  
-  #class Image
-  #    include Neo4j::NodeMixin
-  #    property :filename
-  
-  #    has_n :better
-  #    has_n :worse
-  #    index :filename
-  #end
-  
-  
   post '/upload' do
     tempfile  = params['file'][:tempfile]
     filename  = params['file'][:filename]
@@ -84,25 +69,8 @@ class RouletteService
       options.imagecollection.insert(received_image)
       redirect "/preview/#{filename}"
     end
-    
-  
-    
-  
-  #  Neo4j::Transaction.run do
-  #    node = Image.new(:filename => filename)
-  #  end
-    
   end
   
-  post 'winner/:imageid' do | imageid |
-    
-  end
-  
-  #get '/search/:key' do | key | 
-  #  image = Image.find("filename: #{key}").first
-  #  redirect "/preview/#{image.filename}"
-  #end
-   
   get '/mongodb' do
   
        #imagejson = imagecollection.find({:type => "image"}).to_a #.to_a.first
