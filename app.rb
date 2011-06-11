@@ -20,10 +20,7 @@ class RouletteService
     :templates => 'templates/'
   }
   
-  connection = Mongo::Connection.new
-  db = connection.db("roulette")
-  imagecollection = db.collection("images")
-  
+ 
   
   get '/' do
     mustache :index
@@ -78,13 +75,13 @@ class RouletteService
       :filename  => filename,
       :type      => "image"
     }
-    image = imagecollection.find_one received_image
+    image = options.imagecollection.find_one received_image
     if image
       "Image exist"
     else
       FileUtils.cp tempfile.path, "./uploads/#{filename}"
       received_image.merge! :wins => 0
-      imagecollection.insert(received_image)
+      options.imagecollection.insert(received_image)
       redirect "/preview/#{filename}"
     end
     
@@ -119,13 +116,18 @@ class RouletteService
        #pp_debug parsed 
   
   end
-  
+
   helpers do 
     def pp_debug(obj)
       "<pre>#{obj.pretty_inspect}</pre>"
     end
+  
+    configure do
+      set :connection, Mongo::Connection.new
+      set :db, connection.db("roulette")
+      set :imagecollection, db.collection("images")
+    end
   end
-
 end  
 
 
