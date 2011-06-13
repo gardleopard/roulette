@@ -50,6 +50,13 @@ class RouletteService
      send_file("./uploads/#{filename}")
   end
   
+  post '/win/:filename' do | filename |
+    json = { :filename => filename }
+    image = options.imagecollection.find_one json
+    image["wins"] = image["wins"] + 1
+    options.imagecollection.update({"_id" => image["_id"]}, image)
+  end
+  
   post '/upload' do
     tempfile  = params['file'][:tempfile]
     filename  = params['file'][:filename]
@@ -74,7 +81,7 @@ class RouletteService
   get '/mongodb' do
   
        #imagejson = imagecollection.find({:type => "image"}).to_a #.to_a.first
-       imagejson = imagecollection.find.to_a #.to_a.first
+       imagejson = options.imagecollection.find.to_a #.to_a.first
        pp_debug imagejson
   #     pp_debug imagecollection.methods.sort
   #     imagecollection.drop  
