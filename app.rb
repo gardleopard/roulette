@@ -22,12 +22,6 @@ class RouletteService
     mustache :index
   end
   
-  get '/hello/:name' do | name |
-    @name = name
-    mustache :hello
-  end
-  
-  
   get '/upload' do
     mustache :upload
   end
@@ -90,45 +84,3 @@ class RouletteService
     end
   end
 end  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#https://github.com/andreasronge/neo4j
-
