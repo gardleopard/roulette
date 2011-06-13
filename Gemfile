@@ -5,7 +5,6 @@ gem "mustache"
 gem "shotgun"
 gem "mongo"
 gem "json"
-gem "jruby"
 
 group :test do
   gem "rack-test"
