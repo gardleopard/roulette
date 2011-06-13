@@ -19,7 +19,7 @@ class RouletteService
   }
   
   get '/' do
-    mustache :index
+    mustache :upload
   end
   
   get '/upload' do
