@@ -31,7 +31,7 @@ class RouletteService
     @image2 =  "/img/#{iamge2}"
     mustache :roulette
   end 
-  
+
   get '/preview/:filename' do | filename |
     @imageurl = "/img/#{filename}"
     mustache :preview
@@ -39,9 +39,12 @@ class RouletteService
   
   get '/img/:filename' do | filename|
      content_type 'image/jpg'
-     
-     
-     send_file("./uploads/#{filename}")
+     queryjson = {
+      :filename => filename
+     }
+     image = options.imagecollection.find_one queryjson
+     path = image["path"]
+     send_file("#{path}/#{filename}")
   end
   
   post '/win/:filename' do | filename |
@@ -56,16 +59,22 @@ class RouletteService
     filename  = params['file'][:filename]
     imagename = params['imagename']  
   
+    time = Time.new
+    path="./uploads/#{time.year}/#{time.month}/#{time.day}"
     received_image = {
       :imagename => imagename,
       :filename  => filename,
-      :type      => "image"
+      :type      => "image",
+      :path      => path
     }
     image = options.imagecollection.find_one received_image
     if image
       "Image exist"
     else
-      FileUtils.cp tempfile.path, "./uploads/#{filename}"
+      if ! File.directory? path 
+        %x[mkdir -p #{path}] #could not find mkdir -p in ruby world muhahaahaha
+      end  
+      FileUtils.cp tempfile.path, "#{path}/#{filename}"
       received_image.merge! :wins => 0
       options.imagecollection.insert(received_image)
       redirect "/preview/#{filename}"

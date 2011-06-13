@@ -23,8 +23,8 @@ describe RouletteService do
   context "upload" do
     it "stores an image" do
       post '/upload', 'file' => Rack::Test::UploadedFile.new('spec/fixtures/testimage.jpg', 'image/jpg'), 'imagename' => 'testimage'
-      Dir['uploads/*'].should include('uploads/testimage.jpg') 
-      FileUtils.rm( 'uploads/testimage.jpg' ) 
+      Dir["#{getpath}/*"].should include("#{getpath}/testimage.jpg") 
+      FileUtils.rm( "#{getpath}/testimage.jpg" ) 
     end
   end
  
@@ -43,4 +43,9 @@ describe RouletteService do
       imagejson["wins"].should eql(wins + 1)
     end  
   end
+  def getpath 
+    time = Time.new
+    "./uploads/#{time.year}/#{time.month}/#{time.day}"
+  end
+
 end
