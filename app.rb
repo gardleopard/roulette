@@ -79,8 +79,8 @@ class RouletteService
   
     configure do
       set :connection, Mongo::Connection.new
-      set :db, connection.db("roulette")
-      set :imagecollection, db.collection("images")
+      set :db, connection["roulette"]
+      set :imagecollection, db["images"]
     end
   end
 end  

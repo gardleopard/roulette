@@ -29,8 +29,8 @@ describe RouletteService do
   end
  
   connection = Mongo::Connection.new
-  db = connection.db("roulette")
-  imagecollection = db.collection("images")
+  db = connection["roulette"]
+  imagecollection = db["images"]
  
   context "win" do
     it "registers a victory on an image" do
