@@ -78,20 +78,6 @@ class RouletteService
     end
   end
   
-  get '/mongodb' do
-  
-       #imagejson = imagecollection.find({:type => "image"}).to_a #.to_a.first
-       imagejson = options.imagecollection.find.to_a #.to_a.first
-       pp_debug imagejson
-  #     pp_debug imagecollection.methods.sort
-  #     imagecollection.drop  
-     #pp_debug imagejson["filename"]
-  #     pp_debug imagecollection.size     
-       #parsed = JSON.parse(imagejson)
-       #pp_debug parsed 
-  
-  end
-
   helpers do 
     def pp_debug(obj)
       "<pre>#{obj.pretty_inspect}</pre>"
