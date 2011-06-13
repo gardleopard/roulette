@@ -19,6 +19,7 @@ RSpec.configure do |config|
   }
 end
 describe RouletteService do
+
   context "upload" do
     it "stores an image" do
       post '/upload', 'file' => Rack::Test::UploadedFile.new('spec/fixtures/testimage.jpg', 'image/jpg'), 'imagename' => 'testimage'
@@ -26,13 +27,13 @@ describe RouletteService do
       FileUtils.rm( 'uploads/testimage.jpg' ) 
     end
   end
-  
+ 
+  connection = Mongo::Connection.new
+  db = connection.db("roulette")
+  imagecollection = db.collection("images")
+ 
   context "win" do
     it "registers a victory on an image" do
-      connection = Mongo::Connection.new
-      db = connection.db("roulette")
-      imagecollection = db.collection("images")
-
       post '/upload', 'file' => Rack::Test::UploadedFile.new('spec/fixtures/testimage.jpg', 'image/jpg'), 'imagename' => 'testimage'
       imagejson = imagecollection.find_one 
       filename = imagejson.fetch 'filename'
@@ -41,13 +42,5 @@ describe RouletteService do
       imagejson = imagecollection.find_one
       imagejson["wins"].should eql(wins + 1)
     end  
-  end
-
-  helpers do
-    configure do
-      set :connection, Mongo::Connection.new
-      set :db, connection.db("roulette")
-      set :imagecollection, db.collection("images")
-    end 
   end
 end
