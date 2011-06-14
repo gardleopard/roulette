@@ -6,6 +6,7 @@ require 'fileutils'
 require 'pp'
 require 'mongo'
 require 'json'
+require 'mini_exiftool'
 
 
 class RouletteService 
@@ -67,6 +68,7 @@ class RouletteService
       :type      => "image",
       :path      => path
     }
+    
     image = options.imagecollection.find_one received_image
     if image
       "Image exist"
@@ -76,6 +78,15 @@ class RouletteService
       end  
       FileUtils.cp tempfile.path, "#{path}/#{filename}"
       received_image.merge! :wins => 0
+      exif = MiniExiftool.new "#{path}/#{filename}"
+      if exif
+        exifdata = Hash.new
+        exif.tags.sort.each do | tag |
+          exifdata[tag] = exif[tag]
+        end
+        received_image.merge! :exif =>exifdata
+      end 
+
       options.imagecollection.insert(received_image)
       redirect "/preview/#{filename}"
     end
