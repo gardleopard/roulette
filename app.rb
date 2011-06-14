@@ -72,7 +72,7 @@ class RouletteService
       "Image exist"
     else
       if ! File.directory? path 
-        %x[mkdir -p #{path}] #could not find mkdir -p in ruby world muhahaahaha
+        FileUtils.mkdir_p(path)
       end  
       FileUtils.cp tempfile.path, "#{path}/#{filename}"
       received_image.merge! :wins => 0
