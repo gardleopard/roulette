@@ -7,6 +7,8 @@ require 'pp'
 require 'mongo'
 require 'json'
 require 'mini_exiftool'
+require 'RMagick'
+
 
 
 class RouletteService 
@@ -60,13 +62,17 @@ class RouletteService
   end
   
   get '/img/:filename' do | filename|
-     content_type 'image/jpg'
-     queryjson = {
+    content_type 'image/jpg'
+    queryjson = {
       :filename => filename
-     }
-     image = options.imagecollection.find_one queryjson
-     path = image["path"]
-     send_file("#{path}/#{filename}")
+    }
+    image = options.imagecollection.find_one queryjson
+    path = image["path"]
+    img = Magick::Image.read("#{path}/#{filename}")[0]
+    pp img["EXIF:Orientation"] # find rotation
+    img.rotate!(270) #rotate
+    img.format = 'jpg'
+    img.to_blob
   end
   
   post '/win/:filename' do | filename |
