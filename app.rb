@@ -27,6 +27,19 @@ class RouletteService
     mustache :upload
   end
   
+  get '/search/:key/:value' do | key, value | 
+    queryjson = {
+      key => value 
+    }
+    result = options.imagecollection.find queryjson
+    @images = []
+    result.each do | image |
+      @images.push image['filename'] 
+    end
+    mustache :result
+  end
+
+  
   get '/roulette/:image1/:image2' do | image1, image2 | #soon deprecated 
     @image1   =  "/img/#{image2}"
     @image2 =  "/img/#{iamge2}"
@@ -44,6 +57,7 @@ class RouletteService
       :filename => filename
      }
      image = options.imagecollection.find_one queryjson
+     pp image
      path = image["path"]
      send_file("#{path}/#{filename}")
   end
@@ -80,11 +94,9 @@ class RouletteService
       received_image.merge! :wins => 0
       exif = MiniExiftool.new "#{path}/#{filename}"
       if exif
-        exifdata = Hash.new
         exif.tags.sort.each do | tag |
-          exifdata[tag] = exif[tag]
+          received_image.merge! tag => exif[tag]
         end
-        received_image.merge! :exif =>exifdata
       end 
 
       options.imagecollection.insert(received_image)
