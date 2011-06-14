@@ -1,10 +1,10 @@
 module Views
   class Roulette < Layout
-    def champion 
-      @champion
+    def image1 
+      "/img/" + @image1['filename']
     end
-    def challenger
-      @challenger
+    def image2 
+      "/img/" + @image2['filename']
     end
   end
 end

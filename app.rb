@@ -38,13 +38,21 @@ class RouletteService
     end
     mustache :result
   end
-
   
-  get '/roulette/:image1/:image2' do | image1, image2 | #soon deprecated 
-    @image1   =  "/img/#{image2}"
-    @image2 =  "/img/#{iamge2}"
-    mustache :roulette
-  end 
+  get '/roulette' do 
+    result = options.imagecollection.find
+    rnd1 = rand(result.count)
+    rnd2 = rand(result.count)
+    if rnd1 == rnd2 
+      redirect '/roulette'
+    end
+
+    @image1 = result.to_a[rnd1]
+    result = options.imagecollection.find
+    @image2 = result.to_a[rnd2]
+    
+    mustache :roulette   
+  end
 
   get '/preview/:filename' do | filename |
     @imageurl = "/img/#{filename}"
@@ -57,7 +65,6 @@ class RouletteService
       :filename => filename
      }
      image = options.imagecollection.find_one queryjson
-     pp image
      path = image["path"]
      send_file("#{path}/#{filename}")
   end
