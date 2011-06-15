@@ -1,4 +1,4 @@
-require 'app'
+require File.expand_path("../../app", __FILE__)
 require 'rack/test'
 require 'pp'
 require 'fileutils'
