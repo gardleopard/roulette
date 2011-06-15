@@ -122,16 +122,17 @@ class RouletteService < Sinatra::Base
       "<pre>#{obj.pretty_inspect}</pre>"
     end
   
-    configure do
-      set :connection, Mongo::Connection.new
-      set :db, connection["roulette"]
-      set :imagecollection, db["images"]
-    end
     def rotate(img)
       orientation = img["EXIF:Orientation"] # find rotation
       if orientation == "8"
         img.rotate!(270) #rotate
       end  
     end
+  end
+  
+  configure do
+    set :connection, Mongo::Connection.new
+    set :db, connection["roulette"]
+    set :imagecollection, db["images"]
   end
 end  
