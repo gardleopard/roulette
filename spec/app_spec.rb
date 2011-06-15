@@ -16,6 +16,7 @@ RSpec.configure do |config|
   config.after {
     connection = Mongo::Connection.new
     connection.drop_database "roulette"
+    FileUtils.rm( "#{getpath}/testimage.jpg" ) 
   }
 end
 describe RouletteService do
@@ -24,7 +25,6 @@ describe RouletteService do
     it "stores an image" do
       post '/upload', 'file' => Rack::Test::UploadedFile.new('spec/fixtures/testimage.jpg', 'image/jpg'), 'imagename' => 'testimage'
       Dir["#{getpath}/*"].should include("#{getpath}/testimage.jpg") 
-      FileUtils.rm( "#{getpath}/testimage.jpg" ) 
     end
   end
  
@@ -38,7 +38,7 @@ describe RouletteService do
       imagejson = imagecollection.find_one 
       filename = imagejson.fetch 'filename'
       wins = imagejson.fetch "wins"
-      post "/win/#{filename}"
+      get "/win/#{filename}"
       imagejson = imagecollection.find_one
       imagejson["wins"].should eql(wins + 1)
     end  

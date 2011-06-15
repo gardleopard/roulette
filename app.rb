@@ -74,7 +74,7 @@ class RouletteService
     img.to_blob
   end
   
-  post '/win/:filename' do | filename |
+  get '/win/:filename' do | filename |
     json = { :filename => filename }
     image = options.imagecollection.find_one json
     image["wins"] = image["wins"] + 1
