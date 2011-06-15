@@ -118,10 +118,6 @@ class RouletteService < Sinatra::Base
   end
   
   helpers do 
-    def pp_debug(obj)
-      "<pre>#{obj.pretty_inspect}</pre>"
-    end
-  
     def rotate(img)
       orientation = img["EXIF:Orientation"] # find rotation
       if orientation == "8"
