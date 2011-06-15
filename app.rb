@@ -79,6 +79,7 @@ class RouletteService
     image = options.imagecollection.find_one json
     image["wins"] = image["wins"] + 1
     options.imagecollection.update({"_id" => image["_id"]}, image)
+    redirect '/roulette'
   end
   
   post '/upload' do
