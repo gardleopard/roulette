@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'sinatra'
+require 'sinatra/base'
 require 'mustache/sinatra'
 require 'fileutils'
 require 'pp'
@@ -11,8 +11,8 @@ require 'RMagick'
 
 
 
-class RouletteService 
-  Sinatra.register Mustache::Sinatra
+class RouletteService < Sinatra::Base
+  register Mustache::Sinatra
 
   require File.expand_path('../views/layout', __FILE__)
   
