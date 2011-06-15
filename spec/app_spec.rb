@@ -1,4 +1,4 @@
-require 'app'
+require File.expand_path("../../app", __FILE__)
 require 'rack/test'
 require 'pp'
 require 'fileutils'
@@ -6,17 +6,15 @@ require 'fileutils'
 
 module MyHelpers
   def app
-   Sinatra::Application
+    RouletteService
   end
-  
 end
 RSpec.configure do |config|
   config.include Rack::Test::Methods
   config.include MyHelpers
   config.after {
-    connection = Mongo::Connection.new
-    connection.drop_database "roulette"
-    FileUtils.rm( "#{getpath}/testimage.jpg" ) 
+    RouletteService.connection.drop_database('roulette')
+    FileUtils.rm( "#{getpath}/testimage.jpg" )
   }
 end
 describe RouletteService do
