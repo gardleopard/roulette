@@ -113,7 +113,8 @@ class RouletteService < Sinatra::Base
       end 
 
       options.imagecollection.insert(received_image)
-      redirect "/preview/#{filename}"
+      @imageurl = "/img/#{filename}"
+      mustache :upload
     end
   end
   
