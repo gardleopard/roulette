@@ -22,7 +22,7 @@ class RouletteService < Sinatra::Base
   }
   
   get '/' do
-    mustache :upload
+     redirect '/roulette'
   end
   
   get '/upload' do
