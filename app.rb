@@ -69,8 +69,7 @@ class RouletteService
     image = options.imagecollection.find_one queryjson
     path = image["path"]
     img = Magick::Image.read("#{path}/#{filename}")[0]
-    pp img["EXIF:Orientation"] # find rotation
-    img.rotate!(270) #rotate
+    rotate img
     img.format = 'jpg'
     img.to_blob
   end
@@ -126,6 +125,12 @@ class RouletteService
       set :connection, Mongo::Connection.new
       set :db, connection["roulette"]
       set :imagecollection, db["images"]
+    end
+    def rotate(img)
+      orientation = img["EXIF:Orientation"] # find rotation
+      if orientation == "8"
+        img.rotate!(270) #rotate
+      end  
     end
   end
 end  
