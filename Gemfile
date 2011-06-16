@@ -6,6 +6,7 @@ gem "shotgun"
 gem "mongo"
 gem "json"
 gem "mini_exiftool"
+gem "bson_ext"
 
 
 group :test do
