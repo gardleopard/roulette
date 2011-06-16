@@ -43,7 +43,7 @@ describe RouletteService do
   end
   def getpath 
     time = Time.new
-    "./uploads/#{time.year}/#{time.month}/#{time.day}"
+    "./public/images/uploads/#{time.year}/#{time.month}/#{time.day}"
   end
 
 end

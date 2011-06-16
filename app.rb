@@ -88,7 +88,7 @@ class RouletteService < Sinatra::Base
     imagename = params['imagename']  
   
     time = Time.new
-    path="./uploads/#{time.year}/#{time.month}/#{time.day}"
+    path="./public/images/uploads/#{time.year}/#{time.month}/#{time.day}"
     received_image = {
       :imagename => imagename,
       :filename  => filename,
