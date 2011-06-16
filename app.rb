@@ -7,7 +7,6 @@ require 'pp'
 require 'mongo'
 require 'json'
 require 'mini_exiftool'
-require 'RMagick'
 
 
 
@@ -55,25 +54,7 @@ class RouletteService < Sinatra::Base
     
     mustache :roulette   
   end
-
-  get '/preview/:filename' do | filename |
-    @imageurl = "/img/#{filename}"
-    mustache :preview
-  end
-  
-  get '/img/:filename' do | filename|
-    content_type 'image/jpg'
-    queryjson = {
-      :filename => filename
-    }
-    image = options.imagecollection.find_one queryjson
-    path = image["path"]
-    img = Magick::Image.read("#{path}/#{filename}")[0]
-    rotate img
-    img.format = 'jpg'
-    img.to_blob
-  end
-  
+ 
   get '/win/:filename' do | filename |
     json = { :filename => filename }
     image = options.imagecollection.find_one json
@@ -118,17 +99,7 @@ class RouletteService < Sinatra::Base
       mustache :upload
     end
   end
-  
-  helpers do 
-    def rotate(img)
-      orientation = img["EXIF:Orientation"] # find rotation
-      if orientation == "8"
-        img.rotate!(270) #rotate
-      end  
-    end
-  end
-  
-  configure do
+   configure do
     set :connection, Mongo::Connection.new
     set :db, connection["roulette"]
     set :imagecollection, db["images"]
