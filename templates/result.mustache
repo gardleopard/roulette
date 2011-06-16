@@ -1,5 +1,22 @@
+<ul id="resultlist">
+  {{#images}}
+    <li>
+       <img src="/img/{{to_s}}" width=75%% />
+    </li>
+  {{/images}}
+</ul>
+<script type="text/javascript">
+	$(document).ready(
+		function(){
+			$('#resultlist').innerfade({
+				speed: 'slow',
+				timeout: 4000,
+				type: 'sequence',
+				containerheight: '220px',
+ 				animationtype: 'slide'
+			});
+			
+			}
+	);
+</script>
 
-{{#images}}
-    <img src="/img/{{to_s}}" width="40%" height="40%"/>
-
-{{/images}}
