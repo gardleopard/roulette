@@ -89,11 +89,12 @@ class RouletteService < Sinatra::Base
   
     time = Time.new
     path="./public/images/uploads/#{time.year}/#{time.month}/#{time.day}"
+    imagepath="/images/uploads/#{time.year}/#{time.month}/#{time.day}"
     received_image = {
       :imagename => imagename,
       :filename  => filename,
       :type      => "image",
-      :path      => path
+      :path      => imagepath
     }
     
     image = options.imagecollection.find_one received_image
@@ -113,7 +114,7 @@ class RouletteService < Sinatra::Base
       end 
 
       options.imagecollection.insert(received_image)
-      @imageurl = "/img/#{filename}"
+      @imageurl = "#{imagepath}/#{filename}"
       mustache :upload
     end
   end
