@@ -76,7 +76,26 @@ class RouletteService < Sinatra::Base
     options.imagecollection.update({"_id" => image["_id"]}, image)
     redirect '/roulette'
   end
+  post '/register' do
+    imagepath = "/images/" + params['path']
+    received_image = {
+      :filename  => params['filename'],
+      :filepath  => params['path'],
+      :type      => "image",
+      :path      => imagepath
+    }
+      received_image.merge! :wins => 0
+      exif = MiniExiftool.new "#{params['path']}#{params['filename']}"
+      if exif
+        exif.tags.sort.each do | tag |
+          received_image.merge! tag => exif[tag]
+        end
+      end
+
+      options.imagecollection.insert(received_image)
+  end
   
+
   post '/upload' do
     tempfile  = params['file'][:tempfile]
     filename  = params['file'][:filename]
@@ -88,6 +107,7 @@ class RouletteService < Sinatra::Base
     received_image = {
       :imagename => imagename,
       :filename  => filename,
+      :filepath  => path,
       :type      => "image",
       :path      => imagepath
     }
