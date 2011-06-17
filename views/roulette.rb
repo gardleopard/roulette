@@ -1,16 +1,16 @@
 module Views
   class Roulette < Layout
     def image1 
-      @image1['path']+"/"+@image1['filename']
+      "/images"+@image1['file']
     end
     def image2 
-      @image2['path']+"/"+@image2['filename']
+      "/images"+@image2['file']
     end
     def url1 
-      @image1['filename']
+      @image1['file']
     end
     def url2 
-      @image2['filename']
+      @image2['file']
     end
   end
 end

@@ -47,8 +47,7 @@ class RouletteService < Sinatra::Base
     result = options.imagecollection.find queryjson
     @images = []
     result.each do | image |
-      @images.push image['path']+"/"+image['filename'] 
-      pp image['filename']
+      @images.push "/image"+image['file'] 
     end
 
     mustache :result
@@ -98,17 +97,13 @@ class RouletteService < Sinatra::Base
   post '/upload' do
     tempfile  = params['file'][:tempfile]
     filename  = params['file'][:filename]
-    imagename = params['imagename']  
   
     time = Time.new
     path="./public/images/uploads/#{time.year}/#{time.month}/#{time.day}"
     imagepath="/images/uploads/#{time.year}/#{time.month}/#{time.day}"
     received_image = {
-      :imagename => imagename,
-      :filename  => filename,
-      :filepath  => path,
+      :file => "uploads/#{time.year}/#{time.month}/#{time.day}/#{filename}",
       :type      => "image",
-      :path      => imagepath
     }
     
     image = options.imagecollection.find_one received_image
