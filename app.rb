@@ -9,7 +9,6 @@ require 'json'
 require 'mini_exiftool'
 
 
-
 class RouletteService < Sinatra::Base
   register Mustache::Sinatra
 
@@ -39,6 +38,21 @@ class RouletteService < Sinatra::Base
     end
     mustache :result
   end
+  
+  get '/slideshow' do
+    queryjson = {
+      :wins => {"$gt" => 0}
+      }
+    result = options.imagecollection.find queryjson
+    @images = []
+    result.each do | image |
+      @images.push image['path']+"/"+image['filename'] 
+      pp image['filename']
+    end
+
+    mustache :result
+  end
+
   
   get '/roulette' do 
     result = options.imagecollection.find
