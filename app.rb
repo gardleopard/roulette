@@ -69,21 +69,26 @@ class RouletteService < Sinatra::Base
     mustache :roulette   
   end
  
-  get '/win/:filename' do | filename |
-    json = { :filename => filename }
+  get '/win/*' do 
+    file = params[:splat].first
+    pp file
+    json = { :file => file }
     image = options.imagecollection.find_one json
-    image["wins"] = image["wins"] + 1
-    options.imagecollection.update({"_id" => image["_id"]}, image)
+    if image
+      image["wins"] = image["wins"] + 1
+      options.imagecollection.update({"_id" => image["_id"]}, image)
+    end
     redirect '/roulette'
   end
 
   post '/register' do
+    file = params['file'].sub("\/\.\/","\/")
     received_image = {
-      :file  => params['file'],
-      :type      => "image",
+      :file  => file,
+      :type      => "image"
     }
       received_image.merge! :wins => 0
-      exif = MiniExiftool.new "#{params['file']}"
+      exif = MiniExiftool.new "#{file}"
       if exif
         exif.tags.sort.each do | tag |
           received_image.merge! tag => exif[tag]
@@ -103,7 +108,7 @@ class RouletteService < Sinatra::Base
     imagepath="/images/uploads/#{time.year}/#{time.month}/#{time.day}"
     received_image = {
       :file => "uploads/#{time.year}/#{time.month}/#{time.day}/#{filename}",
-      :type      => "image",
+      :type      => "image"
     }
     
     image = options.imagecollection.find_one received_image

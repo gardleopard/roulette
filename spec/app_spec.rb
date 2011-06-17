@@ -34,9 +34,9 @@ describe RouletteService do
     it "registers a victory on an image" do
       post '/upload', 'file' => Rack::Test::UploadedFile.new('spec/fixtures/testimage.jpg', 'image/jpg'), 'imagename' => 'testimage'
       imagejson = imagecollection.find_one 
-      filename = imagejson.fetch 'filename'
+      file = imagejson.fetch 'file'
       wins = imagejson.fetch "wins"
-      get "/win/#{filename}"
+      get "/win/#{file}"
       imagejson = imagecollection.find_one
       imagejson["wins"].should eql(wins + 1)
     end  
