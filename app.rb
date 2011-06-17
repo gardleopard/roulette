@@ -12,6 +12,7 @@ require 'mini_exiftool'
 class RouletteService < Sinatra::Base
   register Mustache::Sinatra
 
+
   require File.expand_path('../views/layout', __FILE__)
   
   set :mustache, {
@@ -76,16 +77,14 @@ class RouletteService < Sinatra::Base
     options.imagecollection.update({"_id" => image["_id"]}, image)
     redirect '/roulette'
   end
+
   post '/register' do
-    imagepath = "/images/" + params['path']
     received_image = {
-      :filename  => params['filename'],
-      :filepath  => params['path'],
+      :file  => params['file'],
       :type      => "image",
-      :path      => imagepath
     }
       received_image.merge! :wins => 0
-      exif = MiniExiftool.new "#{params['path']}#{params['filename']}"
+      exif = MiniExiftool.new "#{params['file']}"
       if exif
         exif.tags.sort.each do | tag |
           received_image.merge! tag => exif[tag]
