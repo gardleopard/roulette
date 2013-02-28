@@ -83,18 +83,17 @@ class RouletteService < Sinatra::Base
 
   post '/register' do
     file = params['file'].sub("\/\.\/","\/")
-    received_image = {
-      :file  => file,
-      :type      => "image"
-    }
-      received_image.merge! :wins => 0
       exif = MiniExiftool.new "#{file}"
-      if exif
-        exif.tags.sort.each do | tag |
-          received_image.merge! tag => exif[tag]
-        end
-      end
+      received_image =  {}
+      exif_data = {}
 
+      exif.to_hash.each do |key,value|
+        exif_data.merge! key => value.to_s
+      end
+      received_image.merge! "wins" => 0
+      received_image.merge! "exif" => exif_data
+      received_image.merge! "file"  => file
+      received_image.merge! "type"  => "image"
       options.imagecollection.insert(received_image)
   end
   
