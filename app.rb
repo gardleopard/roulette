@@ -83,15 +83,9 @@ class RouletteService < Sinatra::Base
 
   post '/register' do
     file = params['file'].sub("\/\.\/","\/")
-      exif = MiniExiftool.new "#{file}"
       received_image =  {}
-      exif_data = {}
-
-      exif.to_hash.each do |key,value|
-        exif_data.merge! key => value.to_s
-      end
       received_image.merge! "wins" => 0
-      received_image.merge! "exif" => exif_data
+      received_image.merge! "exif" => get_exif(file)
       received_image.merge! "file"  => file
       received_image.merge! "type"  => "image"
       options.imagecollection.insert(received_image)
@@ -105,9 +99,9 @@ class RouletteService < Sinatra::Base
     time = Time.new
     path="./public/images/uploads/#{time.year}/#{time.month}/#{time.day}"
     imagepath="/images/uploads/#{time.year}/#{time.month}/#{time.day}"
-    received_image = {
-      :file => "uploads/#{time.year}/#{time.month}/#{time.day}/#{filename}",
-      :type      => "image"
+    received_image =  {
+      "file" => "uploads/#{time.year}/#{time.month}/#{time.day}/#{filename}",
+      "type" => "image"
     }
     
     image = options.imagecollection.find_one received_image
@@ -119,12 +113,7 @@ class RouletteService < Sinatra::Base
       end  
       FileUtils.cp tempfile.path, "#{path}/#{filename}"
       received_image.merge! :wins => 0
-      exif = MiniExiftool.new "#{path}/#{filename}"
-      if exif
-        exif.tags.sort.each do | tag |
-          received_image.merge! tag => exif[tag]
-        end
-      end 
+      received_image.merge! "exif" => get_exif("#{path}/#{filename}")
 
       options.imagecollection.insert(received_image)
       @imageurl = "#{imagepath}/#{filename}"
@@ -136,4 +125,16 @@ class RouletteService < Sinatra::Base
     set :db, connection["roulette"]
     set :imagecollection, db["images"]
   end
+  
+  def get_exif(filename)
+      exif = MiniExiftool.new "#{filename}"
+      exif_data = {}
+
+      exif.to_hash.each do |key,value|
+        exif_data.merge! key => value.to_s
+      end
+      exif_data
+    
+  end
+
 end  
