@@ -47,7 +47,7 @@ class RouletteService < Sinatra::Base
     result = settings.imagecollection.find queryjson
     @images = []
     result.each do | image |
-      @images.push "/image"+image['file'] 
+      @images.push "/images/"+image['file'] 
     end
 
     mustache :result
