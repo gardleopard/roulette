@@ -32,7 +32,7 @@ class RouletteService < Sinatra::Base
     queryjson = {
       key => value 
     }
-    result = options.imagecollection.find queryjson
+    result = settings.imagecollection.find queryjson
     @images = []
     result.each do | image |
       @images.push image['path']+"/"+image['filename'] 
@@ -44,7 +44,7 @@ class RouletteService < Sinatra::Base
     queryjson = {
       :wins => {"$gt" => 0}
       }
-    result = options.imagecollection.find queryjson
+    result = settings.imagecollection.find queryjson
     @images = []
     result.each do | image |
       @images.push "/image"+image['file'] 
@@ -55,7 +55,7 @@ class RouletteService < Sinatra::Base
 
   
   get '/roulette' do 
-    result = options.imagecollection.find
+    result = settings.imagecollection.find
     rnd1 = rand(result.count)
     rnd2 = rand(result.count)
     if rnd1 == rnd2 
@@ -63,7 +63,7 @@ class RouletteService < Sinatra::Base
     end
 
     @image1 = result.to_a[rnd1]
-    result = options.imagecollection.find
+    result = settings.imagecollection.find
     @image2 = result.to_a[rnd2]
     
     mustache :roulette   
@@ -73,10 +73,10 @@ class RouletteService < Sinatra::Base
     file = params[:splat].first
     pp file
     json = { :file => file }
-    image = options.imagecollection.find_one json
+    image = settings.imagecollection.find_one json
     if image
       image["wins"] = image["wins"] + 1
-      options.imagecollection.update({"_id" => image["_id"]}, image)
+      settings.imagecollection.update({"_id" => image["_id"]}, image)
     end
     redirect '/roulette'
   end
@@ -88,7 +88,7 @@ class RouletteService < Sinatra::Base
       received_image.merge! "exif" => get_exif(file)
       received_image.merge! "file"  => file
       received_image.merge! "type"  => "image"
-      options.imagecollection.insert(received_image)
+      settings.imagecollection.insert(received_image)
   end
   
 
@@ -104,7 +104,7 @@ class RouletteService < Sinatra::Base
       "type" => "image"
     }
     
-    image = options.imagecollection.find_one received_image
+    image = settings.imagecollection.find_one received_image
     if image
       "Image exist"
     else
@@ -115,7 +115,7 @@ class RouletteService < Sinatra::Base
       received_image.merge! :wins => 0
       received_image.merge! "exif" => get_exif("#{path}/#{filename}")
 
-      options.imagecollection.insert(received_image)
+      settings.imagecollection.insert(received_image)
       @imageurl = "#{imagepath}/#{filename}"
       mustache :upload
     end
