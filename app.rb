@@ -81,17 +81,6 @@ class RouletteService < Sinatra::Base
     redirect '/roulette'
   end
 
-  post '/register' do
-    file = params['file'].sub("\/\.\/","\/")
-      received_image =  {}
-      received_image.merge! "wins" => 0
-      received_image.merge! "exif" => get_exif(file)
-      received_image.merge! "file"  => file
-      received_image.merge! "type"  => "image"
-      settings.imagecollection.insert(received_image)
-  end
-  
-
   post '/upload' do
     tempfile  = params['file'][:tempfile]
     filename  = params['file'][:filename]
