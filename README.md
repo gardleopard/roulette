@@ -7,8 +7,4 @@
 
 
 #Add images to the app
-* find . -name *.JPG -exec curl -F file=$PWD/{} http://localhost:9292/register \;
-* cd public 
-* mkdir images
-* cd images
-* ln -s /dir/with/images
+* find . -name "*.jpg" -exec curl -i -F imagename={} -F file=@{} http://localhost:9393/upload \;
